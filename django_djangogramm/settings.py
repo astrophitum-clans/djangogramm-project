@@ -82,6 +82,8 @@ DATABASES = {
     }
 }
 
+# add custom user model
+
 AUTH_USER_MODEL = 'djangogramm.DgUser'
 
 # Password validation
