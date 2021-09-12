@@ -6,12 +6,13 @@
 </head>
 <body>
 <h2>User login</h2>
-{% if user.is_authenficated %}
+{% if user.is_authenticated %}
 <p>You are already logged</p>
 {% else %}
 <form method="post">
 {% csrf_token %}
     {{ form.as_p }}
+    <input type="hidden" name="next" value="{{ next }}">
     <input type="submit" value="Log in">
 </form>
 {% endif %}
