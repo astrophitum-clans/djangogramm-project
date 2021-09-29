@@ -1,12 +1,15 @@
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.http import HttpResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import CreateView, UpdateView, TemplateView
+from django.core.signing import BadSignature
 
-from djangogramm.forms import LoginForm, SignupForm, UserProfileForm
+from djangogramm.utilities import signer
+from djangogramm.forms import LoginForm, SignUpForm, UserProfileForm
 from djangogramm.models import DgUser
 
 
@@ -25,10 +28,31 @@ class DgUserLogoutView(LogoutView):
     template_name = 'djangogramm/logout.html'
 
 
-class DgUserSignupView(LoginRequiredMixin, CreateView):
-    form_class = SignupForm
+class DgUserSignUpView(CreateView):
+    model = DgUser
+    form_class = SignUpForm
     template_name = 'djangogramm/signup.html'
-    success_url = reverse_lazy('djangogramm:login')
+    success_url = reverse_lazy('djangogramm:signup_done')
+
+
+class DgUserSignUpDoneView(TemplateView):
+    template_name = 'djangogramm/signup_done.html'
+
+
+def user_activate(request, sign):
+    try:
+        email = signer.unsign(sign)
+    except BadSignature:
+        return render(request, 'djangogramm/bad_signature.html')
+    user = get_object_or_404(DgUser, email=email)
+    if user.is_activated:
+        return render(request, 'djangogramm/user_is_activated.html')
+    else:
+        user.is_active = True
+        user.is_activated = True
+        user.save()
+        login(request, user)
+        return redirect('djangogramm:profile')
 
 
 class DgUserProfileView(LoginRequiredMixin, UpdateView):
@@ -45,4 +69,3 @@ class DgUserProfileView(LoginRequiredMixin, UpdateView):
         if not queryset:
             queryset = self.get_queryset()
             return get_object_or_404(queryset, pk=self.user_id)
-

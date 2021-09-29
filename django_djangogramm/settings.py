@@ -85,7 +85,7 @@ DATABASES = {
 # add custom user model
 
 AUTH_USER_MODEL = 'djangogramm.DgUser'
-AUTHENTICATION_BACKENDS = ['djangogramm.authentication.EmailBackend']
+# AUTHENTICATION_BACKENDS = ['djangogramm.authentication.EmailBackend']
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -132,3 +132,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Redirect to home URL after login
 LOGIN_REDIRECT_URL = '/'
+
+EMAIL_PORT = 1025
