@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
@@ -17,18 +17,22 @@ from djangogramm.models import DgUser
 def index(request):
     return HttpResponse('<h2>This is DjangoGramm</h2>')
 
+# User views
 
 class DgUserLoginView(LoginView):
+    """User login view"""
     form_class = LoginForm
     template_name = 'djangogramm/login.html'
     success_url = reverse_lazy('djangogramm:index')
 
 
 class DgUserLogoutView(LogoutView):
+    """User logout view"""
     template_name = 'djangogramm/logout.html'
 
 
 class DgUserSignUpView(CreateView):
+    """User signup view"""
     model = DgUser
     form_class = SignUpForm
     template_name = 'djangogramm/signup.html'
@@ -36,10 +40,12 @@ class DgUserSignUpView(CreateView):
 
 
 class DgUserSignUpDoneView(TemplateView):
+    """User signup done view"""
     template_name = 'djangogramm/signup_done.html'
 
 
 def user_activate(request, sign):
+    """User activation view. Login and redirect to user profile page after successfully activation"""
     try:
         email = signer.unsign(sign)
     except BadSignature:
@@ -56,6 +62,7 @@ def user_activate(request, sign):
 
 
 class DgUserProfileView(LoginRequiredMixin, UpdateView):
+    """User update profile view"""
     template_name = 'djangogramm/user_profile.html'
     model = DgUser
     form_class = UserProfileForm

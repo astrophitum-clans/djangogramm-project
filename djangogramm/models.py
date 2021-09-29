@@ -1,4 +1,4 @@
-from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -14,8 +14,6 @@ class DgUserManager(BaseUserManager):
         user = self.model(
             email=self.normalize_email(email),
         )
-        # set username like Instagram does
-        user.username = user.email.split('@')[0]
         # a user is not active and not activated before email confirmation
         user.is_active = False
         user.is_activated = False
@@ -43,6 +41,7 @@ class DgUserManager(BaseUserManager):
 
 
 class DgUser(AbstractUser):
+    """Djangogramm user model"""
     username = models.CharField(blank=True, max_length=255)
     email = models.EmailField(
         verbose_name='email address',

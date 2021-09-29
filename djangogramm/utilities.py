@@ -6,7 +6,7 @@ signer = Signer()
 
 
 def send_confirmation_email(user):
-    """send confirmation emails to user"""
+    """send confirmation email to user"""
     if ALLOWED_HOSTS:
         host = f'http://{ALLOWED_HOSTS[0]}'
     else:
