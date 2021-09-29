@@ -1,16 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>User login</title>
-</head>
-<body>
-<h2>User account</h2>
-<form method="post">
-{% csrf_token %}
-    {{ form.as_p }}
-    <input type="hidden" name="next" value="{{ next }}">
-    <input type="submit" value="Confirm">
-</form>
-</body>
-</html>
+{% extends 'djangogramm/base.html' %}
+
+{% load bootstrap5 %}
+
+{% block title %}User account{% endblock %}
+
+{% block content %}
+    <form  role="form" method="post">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <input type="hidden" name="next" value="{{ next }}">
+        {% buttons submit='Confirm' reset="Cancel" %}{% endbuttons %}
+    </form>
+{% endblock %}

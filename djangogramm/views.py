@@ -13,10 +13,6 @@ from djangogramm.forms import LoginForm, SignUpForm, UserProfileForm
 from djangogramm.models import DgUser
 
 
-@login_required
-def index(request):
-    return HttpResponse('<h2>This is DjangoGramm</h2>')
-
 # User views
 
 class DgUserLoginView(LoginView):
@@ -76,3 +72,10 @@ class DgUserProfileView(LoginRequiredMixin, UpdateView):
         if not queryset:
             queryset = self.get_queryset()
             return get_object_or_404(queryset, pk=self.user_id)
+
+
+# Djangogramm views
+
+class DgIndex(TemplateView):
+    """Index page"""
+    template_name = 'djangogramm/index.html'

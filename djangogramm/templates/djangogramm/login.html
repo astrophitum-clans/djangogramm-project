@@ -1,20 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>User login</title>
-</head>
-<body>
-<h2>User login</h2>
-{% if user.is_authenticated %}
-<p>You are already logged</p>
-{% else %}
-<form method="post">
-{% csrf_token %}
-    {{ form.as_p }}
-    <input type="hidden" name="next" value="{{ next }}">
-    <input type="submit" value="Log in">
-</form>
-{% endif %}
-</body>
-</html>
+{% extends 'djangogramm/base.html' %}
+
+{% load bootstrap5 %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <p>You are already logged</p>
+    {% else %}
+    <form  role="form" method="post">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <input type="hidden" name="next" value="{{ next }}">
+        {% buttons submit='Log in' reset="Cancel" %}{% endbuttons %}
+    </form>
+    {% endif %}
+{% endblock %}

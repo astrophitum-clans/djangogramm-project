@@ -1,3 +1,4 @@
+{% autoescape off %}
 Thanks for signing up with DjangoGramm! You must follow this link to activate your account:
 
 {{ host }}{% url 'djangogramm:activate' sign=sign %}
@@ -5,3 +6,4 @@ Thanks for signing up with DjangoGramm! You must follow this link to activate yo
 Have fun, and don't hesitate to contact us with your feedback.
 
 The DjangoGramm
+{% endautoescape %}
