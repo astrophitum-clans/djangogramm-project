@@ -12,6 +12,7 @@ user_signup = Signal(providing_args=['instance'])
 
 
 def user_signup_dispatcher(sender, **kwargs):
+    """Signal dispatcher for send confirmation email"""
     send_confirmation_email(kwargs['instance'])
 
 

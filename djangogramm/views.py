@@ -1,8 +1,6 @@
 from django.contrib.auth import login
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
-from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView, TemplateView
@@ -76,6 +74,6 @@ class DgUserProfileView(LoginRequiredMixin, UpdateView):
 
 # Djangogramm views
 
-class DgIndex(TemplateView):
+class DgPostListView(LoginRequiredMixin, TemplateView):
     """Index page"""
     template_name = 'djangogramm/index.html'

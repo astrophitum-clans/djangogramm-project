@@ -1,9 +1,11 @@
 {% extends 'djangogramm/base.html' %}
-
 {% load bootstrap5 %}
-
+{% load thumbnail %}
 {% block title %}Index{% endblock %}
-
 {% block content %}
     <h2>This is DjangoGramm!</h2>
+    <div class="col-md-auto">
+    {% if user.avatar %}
+        <img src="{% thumbnail user.avatar 'default' %}" class="main-image"></div>
+    {% endif %}
 {% endblock %}

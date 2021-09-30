@@ -1,7 +1,7 @@
 from django.urls import path
 
 from .views import (DgUserLoginView, DgUserLogoutView, DgUserSignUpView, DgUserSignUpDoneView, DgUserProfileView,
-                    user_activate, DgIndex)
+                    user_activate, DgPostListView)
 
 app_name = 'djangogramm'
 
@@ -14,5 +14,6 @@ urlpatterns = [
     path('accounts/activate/<str:sign>/', user_activate, name='activate'),
     path('accounts/profile/', DgUserProfileView.as_view(), name='profile'),
     # the djangogramm
-    path('', DgIndex.as_view(), name='index'),
+    path('', DgPostListView.as_view(), name='index'),
+    path('posts/<int:id>', DgPostListView.as_view(), name='post'),
 ]

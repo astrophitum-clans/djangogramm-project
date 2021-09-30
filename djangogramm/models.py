@@ -2,6 +2,8 @@ from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+from .utilities import get_timestamp_path
+
 
 class DgUserManager(BaseUserManager):
     def create_user(self, email, password=None):
@@ -50,7 +52,7 @@ class DgUser(AbstractUser):
     )
     is_activated = models.BooleanField(default=False, db_index=True, verbose_name='is activated')
     bio = models.TextField(blank=True, null=True, verbose_name='biography')
-    avatar = models.ImageField(blank=True, null=True, verbose_name='user avatar')
+    avatar = models.ImageField(blank=True, null=True, upload_to=get_timestamp_path, verbose_name='user avatar')
 
     objects = DgUserManager()
 

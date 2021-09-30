@@ -38,6 +38,10 @@ class LoginForm(AuthenticationForm):
 
 class UserProfileForm(ModelForm):
     """User profile form"""
+    email = forms.EmailField(
+        disabled=True
+    )
+
     class Meta:
         model = get_user_model()
         fields = ('email', 'first_name', 'last_name', 'bio', 'avatar')

@@ -6,7 +6,7 @@
 
 {% block content %}
     {% if user.is_authenticated %}
-        <p>You are already logged</p>
+        <h2>You are already logged</h2>
     {% else %}
     <form  role="form" method="post">
         {% csrf_token %}
