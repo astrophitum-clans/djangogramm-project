@@ -1,0 +1,14 @@
+{% extends 'djangogramm/base.html' %}
+
+{% load bootstrap5 %}
+
+{% block title %}Create Post{% endblock %}
+
+{% block content %}
+    <form role="form" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <input type="hidden" name="next" value="{{ next }}">
+        {% buttons submit='Confirm' reset="Cancel" %}{% endbuttons %}
+    </form>
+{% endblock %}

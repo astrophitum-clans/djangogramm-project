@@ -4,6 +4,7 @@ from django import forms
 from django.forms import ModelForm
 
 from djangogramm.apps import user_signup
+from djangogramm.models import DgPost
 
 
 class SignUpForm(UserCreationForm):
@@ -45,3 +46,9 @@ class UserProfileForm(ModelForm):
     class Meta:
         model = get_user_model()
         fields = ('email', 'first_name', 'last_name', 'bio', 'avatar')
+
+
+class PostCreateForm(ModelForm):
+    class Meta:
+        model = DgPost
+        fields = ('title', 'desc', 'image')

@@ -58,3 +58,18 @@ class DgUser(AbstractUser):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
+
+
+class DgPost(models.Model):
+    """Djangogramm post model"""
+    dg_user = models.ForeignKey(DgUser, on_delete=models.CASCADE)
+    title = models.CharField(max_length=255, verbose_name='title')
+    desc = models.TextField(blank=True, null=True, verbose_name='description')
+    image = models.ImageField(blank=True, null=True, upload_to=get_timestamp_path, verbose_name='post image')
+    pub_date = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name='publication date')
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        ordering = ['-pub_date']

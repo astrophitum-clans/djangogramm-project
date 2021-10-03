@@ -3,12 +3,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, UpdateView, TemplateView
+from django.views.generic import CreateView, UpdateView, TemplateView, ListView
 from django.core.signing import BadSignature
 
 from djangogramm.utilities import signer
-from djangogramm.forms import LoginForm, SignUpForm, UserProfileForm
-from djangogramm.models import DgUser
+from djangogramm.forms import LoginForm, SignUpForm, UserProfileForm, PostCreateForm
+from djangogramm.models import DgUser, DgPost
 
 
 # User views
@@ -74,6 +74,18 @@ class DgUserProfileView(LoginRequiredMixin, UpdateView):
 
 # Djangogramm views
 
-class DgPostListView(LoginRequiredMixin, TemplateView):
+class DgPostListView(LoginRequiredMixin, ListView):
     """Index page"""
+    model = DgPost
     template_name = 'djangogramm/index.html'
+
+
+class DgPostCreateView(LoginRequiredMixin, CreateView):
+    """Add post page"""
+    template_name = 'djangogramm/post_create.html'
+    form_class = PostCreateForm
+    success_url = reverse_lazy('djangogramm:index')
+
+    def form_valid(self, form):
+        form.instance.dg_user = self.request.user
+        return super().form_valid(form)

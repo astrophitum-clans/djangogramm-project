@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'bootstrap5',
     'django_cleanup',
     'easy_thumbnails',
+    'debug_toolbar',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -138,8 +140,16 @@ MEDIA_URL = '/media/'
 # Thumbnails
 THUMBNAIL_ALIASES = {
     '': {
+        'small': {
+            'size': (64, 64),
+            'crop': 'smart',
+        },
         'default': {
             'size': (96, 96),
+            'crop': 'scale',
+        },
+        'large': {
+            'size': (256, 256),
             'crop': 'scale',
         },
     },
@@ -148,3 +158,7 @@ THUMBNAIL_BASEDIR = 'thumbnails'
 
 # email settings
 EMAIL_PORT = 1025
+
+INTERNAL_IPS = [
+    '127.0.0.1',
+]

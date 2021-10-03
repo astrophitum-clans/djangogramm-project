@@ -3,9 +3,21 @@
 {% load thumbnail %}
 {% block title %}Index{% endblock %}
 {% block content %}
-    <h2>This is DjangoGramm!</h2>
-    <div class="col-md-auto">
-    {% if user.avatar %}
-        <img src="{% thumbnail user.avatar 'default' %}" class="main-image"></div>
-    {% endif %}
+    <ul class="list-unstyled" >
+    {% for post in object_list %}
+        <li class="media my-3 p-2 border">
+        <div class="mb-2 p-2 bg-light">
+            {% if post.dg_user.avatar %}
+                <img src="{% thumbnail post.dg_user.avatar 'small' %}" class="border">
+            {% endif %}
+            {{ post.dg_user.username }}
+            {{ post.dg_user.email }}
+        </div>
+        <img src="/media/{{ post.image }}" class="img-fluid">
+        <h5 class="mt-2 px-2">{{ post.title }}</h5>
+        <small class="p-2">{{ post.pub_date }}</small>
+        <p class="p-2">{{ post.desc }}</p>
+        </li>
+    {% endfor %}
+    </ul>
 {% endblock %}
