@@ -100,9 +100,10 @@ class TestPosts(TestCase):
         self.client.login(username='test_user@test.com', password='12345')
         resp = self.client.get('')
         self.assertEqual(resp.status_code, 200)
-        self.assertEqual(resp.context['object_list'][0].title, 'Test post 3')  # 'Test post 3' is the last post!
-        self.assertEqual(resp.context['object_list'][0].desc, 'Test post 3 desc')
-        self.assertEqual(resp.context['object_list'][0].dg_user.email, 'test_user@test.com')
+        last_post = resp.context['object_list'][0]
+        self.assertEqual(last_post.title, 'Test post 3')  # 'Test post 3' is the last post!
+        self.assertEqual(last_post.desc, 'Test post 3 desc')
+        self.assertEqual(last_post.dg_user.email, 'test_user@test.com')
         self.assertEqual(len(resp.context['object_list']), 3)  # total 3 posts
 
     def test_posts_list_page_no_login(self):
