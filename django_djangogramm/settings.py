@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 from pathlib import Path
 
+import dj_database_url
+import django_heroku
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -19,12 +22,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-h+gmizelv*h)(y1ua)qa5f3z4bq%4jz%(-*)**%h$1pw-c2ibz'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-h+gmizelv*h)(y1ua)qa5f3z4bq%4jz%(-*)**%h$1pw-c2ibz')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
+DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'testserver']
+ALLOWED_HOSTS = ['https://evening-reef-96678.herokuapp.com/', '127.0.0.1', 'localhost', 'testserver']
 
 # Application definition
 
@@ -33,7 +37,7 @@ INSTALLED_APPS = [
     'bootstrap5',
     'django_cleanup',
     'easy_thumbnails',
-    'debug_toolbar',
+    # 'debug_toolbar',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -43,7 +47,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -77,15 +81,28 @@ WSGI_APPLICATION = 'django_djangogramm.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'djangogramm',
+        'USER': 'dg',
+        'PASSWORD': 'm091278mm',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
-# add custom user model
+# use heroku postgres db
+# DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
 
+# add custom user model
 AUTH_USER_MODEL = 'djangogramm.DgUser'
 # AUTHENTICATION_BACKENDS = ['djangogramm.authentication.EmailBackend']
 
@@ -123,8 +140,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_URL = '/static/'
+
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = '/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -163,3 +181,6 @@ EMAIL_PORT = 1025
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
+
+# Activate Django-Heroku.
+django_heroku.settings(locals())

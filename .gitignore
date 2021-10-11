@@ -6,3 +6,6 @@ db.sqlite3
 .idea
 djangogramm/authentication.py
 /media/
+/htmlcov/
+.coverage
+settings.py.debug
