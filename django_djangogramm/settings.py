@@ -31,7 +31,7 @@ SECRET_KEY = 'django-insecure-h+gmizelv*h)(y1ua)qa5f3z4bq%4jz%(-*)**%h$1pw-c2ibz
 DEBUG = True
 # DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
 
-ALLOWED_HOSTS = ['https://evening-reef-96678.herokuapp.com/', '127.0.0.1', 'localhost', 'testserver']
+ALLOWED_HOSTS = ['https://evening-reef-96678.herokuapp.com', '127.0.0.1', 'localhost', 'testserver']
 
 # Application definition
 
@@ -158,13 +158,20 @@ MEDIA_URL = '/media/'
 
 # email settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.mailgun.org'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = os.environ.get('MAILGUN_SMTP_LOGIN', 'postmaster@sandboxf5abfa4fe3bd42bfb2f8051a0cb33bbf.mailgun.org')
-EMAIL_HOST_PASSWORD = os.environ.get('MAILGUN_SMTP_PASSWORD', 'm091278mm')
-EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = 'info@djangogramm.com'
-SITE_ID = 2
+# EMAIL_HOST = 'smtp.mailgun.org'
+# EMAIL_PORT = 587
+# EMAIL_HOST_USER = os.environ.get('MAILGUN_SMTP_LOGIN', 'postmaster@sandboxf5abfa4fe3bd42bfb2f8051a0cb33bbf.mailgun.org')
+# EMAIL_HOST_PASSWORD = os.environ.get('MAILGUN_SMTP_PASSWORD', 'm091278mm')
+# EMAIL_USE_TLS = True
+# DEFAULT_FROM_EMAIL = 'info@djangogramm.com'
+# SITE_ID = 2
+
+# read MailerToGo env vars
+EMAIL_HOST = os.environ.get('MAILERTOGO_SMTP_HOST')
+EMAIL_PORT = os.environ.get('MAILERTOGO_SMTP_PORT', 587)
+EMAIL_HOST_USER = os.environ.get('MAILERTOGO_SMTP_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('MAILERTOGO_SMTP_PASSWORD')
+DEFAULT_FROM_EMAIL = os.environ.get('MAILERTOGO_DOMAIN', "mydomain.com")
 
 
 # In debug mode:
@@ -188,5 +195,3 @@ cloudinary.config(
     api_key="678435832967774",
     api_secret="W_jvzN7oLyYWqAAKdD8hofhnVoo"
 )
-
-
