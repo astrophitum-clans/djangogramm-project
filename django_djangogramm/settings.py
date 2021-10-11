@@ -24,14 +24,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-h+gmizelv*h)(y1ua)qa5f3z4bq%4jz%(-*)**%h$1pw-c2ibz'
-# SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-h+gmizelv*h)(y1ua)qa5f3z4bq%4jz%(-*)**%h$1pw-c2ibz')
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-h+gmizelv*h)(y1ua)qa5f3z4bq%4jz%(-*)**%h$1pw-c2ibz')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-# DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
 
-ALLOWED_HOSTS = ['https://evening-reef-96678.herokuapp.com', '127.0.0.1', 'localhost', 'testserver']
+DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
+
+ALLOWED_HOSTS = ['evening-reef-96678.herokuapp.com/', '127.0.0.1', 'localhost', 'testserver']
 
 # Application definition
 
@@ -88,9 +87,10 @@ WSGI_APPLICATION = 'django_djangogramm.wsgi.application'
 #     }
 # }
 
+# local database
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'djangogramm',
         'USER': 'dg',
         'PASSWORD': 'm091278mm',
@@ -158,21 +158,13 @@ MEDIA_URL = '/media/'
 
 # email settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'smtp.mailgun.org'
-# EMAIL_PORT = 587
-# EMAIL_HOST_USER = os.environ.get('MAILGUN_SMTP_LOGIN', 'postmaster@sandboxf5abfa4fe3bd42bfb2f8051a0cb33bbf.mailgun.org')
-# EMAIL_HOST_PASSWORD = os.environ.get('MAILGUN_SMTP_PASSWORD', 'm091278mm')
-# EMAIL_USE_TLS = True
-# DEFAULT_FROM_EMAIL = 'info@djangogramm.com'
-# SITE_ID = 2
 
-# read MailerToGo env vars
-EMAIL_HOST = os.environ.get('MAILERTOGO_SMTP_HOST')
-EMAIL_PORT = os.environ.get('MAILERTOGO_SMTP_PORT', 587)
-EMAIL_HOST_USER = os.environ.get('MAILERTOGO_SMTP_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('MAILERTOGO_SMTP_PASSWORD')
-DEFAULT_FROM_EMAIL = os.environ.get('MAILERTOGO_DOMAIN', "mydomain.com")
-
+# gmail
+EMAIL_HOST = 'smtp.googlemail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'astrophitum.clans@gmail.com'
+EMAIL_HOST_PASSWORD = 'm091278mm'
 
 # In debug mode:
 if DEBUG:
@@ -182,9 +174,6 @@ if DEBUG:
     INTERNAL_IPS = [
         '127.0.0.1',
     ]
-
-    # email settings
-    # EMAIL_PORT = 1025
 
 # Activate Django-Heroku.
 django_heroku.settings(locals())

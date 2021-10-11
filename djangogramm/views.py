@@ -79,6 +79,9 @@ class DgPostListView(LoginRequiredMixin, ListView):
     model = DgPost
     template_name = 'djangogramm/index.html'
 
+    def get_queryset(self):
+        return DgPost.objects.select_related('dg_user')
+
 
 class DgPostCreateView(LoginRequiredMixin, CreateView):
     """Add post page"""
