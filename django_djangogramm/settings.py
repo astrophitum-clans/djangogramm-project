@@ -190,11 +190,13 @@ EMAIL_PORT = 1025
 # Activate Django-Heroku.
 django_heroku.settings(locals())
 
-# cloudinary config
+# cloudinary
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
 cloudinary.config(
     cloud_name="dsg2wylkr",
     api_key="678435832967774",
     api_secret="W_jvzN7oLyYWqAAKdD8hofhnVoo"
 )
 
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
