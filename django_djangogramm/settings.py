@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'bootstrap5',
     'django_cleanup',
     'easy_thumbnails',
-    'cloundary',
+    'cloudinary',
     # 'debug_toolbar',
     'django.contrib.admin',
     'django.contrib.auth',
