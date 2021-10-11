@@ -1,6 +1,6 @@
 {% extends 'djangogramm/base.html' %}
 {% load bootstrap5 %}
-{% load thumbnail %}
+{% load cloudinary %}
 {% block title %}Index{% endblock %}
 {% block content %}
     <ul class="list-unstyled" >
@@ -8,7 +8,7 @@
         <li class="media my-3 p-2 border">
         <div class="mb-2 p-2 bg-light">
             {% if post.dg_user.avatar %}
-                <img src="{{ dg_user.avatar.url }}" class="border">
+                {% cloudinary post.dg_user.avatar crop="fill" height=100 width=100 %}
             {% endif %}
             {{ post.dg_user.username }}
             {{ post.dg_user.email }}

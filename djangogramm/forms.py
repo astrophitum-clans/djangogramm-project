@@ -1,3 +1,4 @@
+from cloudinary.forms import CloudinaryFileField
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import get_user_model
 from django import forms
@@ -42,6 +43,14 @@ class UserProfileForm(ModelForm):
     email = forms.EmailField(
         disabled=True
     )
+    avatar = CloudinaryFileField(
+        # attrs={'style': "margin-top: 30px"},
+        options={
+            'tags': "user_avatar",
+            'crop': 'fill', 'width': 256, 'height': 256,
+            'folder': 'media/avatars/',
+            'eager': [{'crop': 'fill', 'height': 100, 'width': 100}]
+        })
 
     class Meta:
         model = get_user_model()
@@ -49,6 +58,13 @@ class UserProfileForm(ModelForm):
 
 
 class PostCreateForm(ModelForm):
+    image = CloudinaryFileField(
+        options={
+            'tags': "post_image",
+            'crop': 'fill', 'width': 960,
+            'folder': 'media/images/'
+        })
+
     class Meta:
         model = DgPost
         fields = ('title', 'desc', 'image')

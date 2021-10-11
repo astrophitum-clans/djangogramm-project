@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 from pathlib import Path
 
-import dj_database_url
 import django_heroku
 import cloudinary
 import cloudinary.uploader
@@ -39,10 +38,7 @@ ALLOWED_HOSTS = ['https://evening-reef-96678.herokuapp.com/', '127.0.0.1', 'loca
 INSTALLED_APPS = [
     'djangogramm.apps.DjangogrammConfig',
     'bootstrap5',
-    'django_cleanup',
-    'easy_thumbnails',
     'cloudinary',
-    # 'debug_toolbar',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -52,7 +48,6 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -161,38 +156,29 @@ LOGIN_REDIRECT_URL = '/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-# Thumbnails
-THUMBNAIL_ALIASES = {
-    '': {
-        'small': {
-            'size': (64, 64),
-            'crop': 'smart',
-        },
-        'default': {
-            'size': (96, 96),
-            'crop': 'scale',
-        },
-        'large': {
-            'size': (256, 256),
-            'crop': 'scale',
-        },
-    },
-}
-THUMBNAIL_BASEDIR = 'thumbnails'
-
 # email settings
-EMAIL_PORT = 1025
 
-# INTERNAL_IPS = [
-#     '127.0.0.1',
-# ]
+EMAIL_HOST = 'smtp.mailgun.org'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = os.environ.get('MAILGUN_SMTP_LOGIN', 'postmaster@sandboxf5abfa4fe3bd42bfb2f8051a0cb33bbf.mailgun.org')
+EMAIL_HOST_PASSWORD = os.environ.get('MAILGUN_SMTP_PASSWORD', 'm091278mm')
+
+# In debug mode:
+if DEBUG:
+    # Django debug toolbar
+    INSTALLED_APPS.append('debug_toolbar')
+    MIDDLEWARE = ['debug_toolbar.middleware.DebugToolbarMiddleware'] + MIDDLEWARE
+    INTERNAL_IPS = [
+        '127.0.0.1',
+    ]
+
+    # email settings
+    EMAIL_PORT = 1025
 
 # Activate Django-Heroku.
 django_heroku.settings(locals())
 
 # cloudinary
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-
 cloudinary.config(
     cloud_name="dsg2wylkr",
     api_key="678435832967774",
