@@ -25,4 +25,4 @@ def send_confirmation_email(user):
 
 
 def get_timestamp_path(instance, filename):
-    return f'{datetime.now().timestamp()}{splitext(filename)[1]}'
+    return f'/media/{datetime.now().timestamp()}{splitext(filename)[1]}'

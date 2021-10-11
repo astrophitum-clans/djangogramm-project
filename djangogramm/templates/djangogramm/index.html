@@ -8,7 +8,7 @@
         <li class="media my-3 p-2 border">
         <div class="mb-2 p-2 bg-light">
             {% if post.dg_user.avatar %}
-                <img src="{% thumbnail post.dg_user.avatar.url 'small' %}" class="border">
+                <img src="{{ dg_user.avatar }}" class="border">
             {% endif %}
             {{ post.dg_user.username }}
             {{ post.dg_user.email }}
