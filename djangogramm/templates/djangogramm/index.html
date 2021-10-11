@@ -8,12 +8,12 @@
         <li class="media my-3 p-2 border">
         <div class="mb-2 p-2 bg-light">
             {% if post.dg_user.avatar %}
-                <img src="{% thumbnail post.dg_user.avatar 'small' %}" class="border">
+                <img src="{% thumbnail post.dg_user.avatar.url 'small' %}" class="border">
             {% endif %}
             {{ post.dg_user.username }}
             {{ post.dg_user.email }}
         </div>
-        <img src="{{ post.image }}" class="img-fluid">
+        <img src="{{ post.image.url }}" class="img-fluid">
         <h5 class="mt-2 px-2">{{ post.title }}</h5>
         <small class="p-2">{{ post.pub_date }}</small>
         <p class="p-2">{{ post.desc }}</p>
