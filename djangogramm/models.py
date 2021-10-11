@@ -1,3 +1,4 @@
+from cloudinary.models import CloudinaryField
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.db import models
@@ -52,7 +53,8 @@ class DgUser(AbstractUser):
     )
     is_activated = models.BooleanField(default=False, db_index=True, verbose_name='is activated')
     bio = models.TextField(blank=True, null=True, verbose_name='biography')
-    avatar = models.ImageField(blank=True, null=True, upload_to=get_timestamp_path, verbose_name='user avatar')
+    # avatar = models.ImageField(blank=True, null=True, upload_to=get_timestamp_path, verbose_name='user avatar')
+    avatar = CloudinaryField('image')
 
     objects = DgUserManager()
 
@@ -65,7 +67,8 @@ class DgPost(models.Model):
     dg_user = models.ForeignKey(DgUser, on_delete=models.CASCADE)
     title = models.CharField(max_length=255, verbose_name='title')
     desc = models.TextField(blank=True, null=True, verbose_name='description')
-    image = models.ImageField(blank=True, null=True, upload_to=get_timestamp_path, verbose_name='post image')
+    # image = models.ImageField(blank=True, null=True, upload_to=get_timestamp_path, verbose_name='post image')
+    image = CloudinaryField('image')
     pub_date = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name='publication date')
 
     def __str__(self):

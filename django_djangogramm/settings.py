@@ -14,6 +14,9 @@ from pathlib import Path
 
 import dj_database_url
 import django_heroku
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -38,6 +41,7 @@ INSTALLED_APPS = [
     'bootstrap5',
     'django_cleanup',
     'easy_thumbnails',
+    'cloundary',
     # 'debug_toolbar',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -185,3 +189,10 @@ EMAIL_PORT = 1025
 
 # Activate Django-Heroku.
 django_heroku.settings(locals())
+
+# adding config
+cloudinary.config(
+    cloud_name="dsg2wylkr",
+    api_key="678435832967774",
+    api_secret="W_jvzN7oLyYWqAAKdD8hofhnVoo"
+)
