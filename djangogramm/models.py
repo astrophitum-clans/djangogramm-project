@@ -54,7 +54,7 @@ class DgUser(AbstractUser):
     is_activated = models.BooleanField(default=False, db_index=True, verbose_name='is activated')
     bio = models.TextField(blank=True, null=True, verbose_name='biography')
     # avatar = models.ImageField(blank=True, null=True, upload_to=get_timestamp_path, verbose_name='user avatar')
-    avatar = CloudinaryField('image')
+    avatar = CloudinaryField('image', blank=True, null=True)
 
     objects = DgUserManager()
 
@@ -68,7 +68,7 @@ class DgPost(models.Model):
     title = models.CharField(max_length=255, verbose_name='title')
     desc = models.TextField(blank=True, null=True, verbose_name='description')
     # image = models.ImageField(blank=True, null=True, upload_to=get_timestamp_path, verbose_name='post image')
-    image = CloudinaryField('image')
+    image = CloudinaryField('image', blank=True, null=True)
     pub_date = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name='publication date')
 
     def __str__(self):
