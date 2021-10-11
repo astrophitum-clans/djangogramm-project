@@ -157,11 +157,15 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 # email settings
-
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.mailgun.org'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = os.environ.get('MAILGUN_SMTP_LOGIN', 'postmaster@sandboxf5abfa4fe3bd42bfb2f8051a0cb33bbf.mailgun.org')
 EMAIL_HOST_PASSWORD = os.environ.get('MAILGUN_SMTP_PASSWORD', 'm091278mm')
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'info@djangogramm.com'
+SITE_ID = 2
+
 
 # In debug mode:
 if DEBUG:
@@ -173,7 +177,7 @@ if DEBUG:
     ]
 
     # email settings
-    EMAIL_PORT = 1025
+    # EMAIL_PORT = 1025
 
 # Activate Django-Heroku.
 django_heroku.settings(locals())
