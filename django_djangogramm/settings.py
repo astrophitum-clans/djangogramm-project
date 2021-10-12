@@ -178,7 +178,7 @@ cloudinary.config(
 )
 
 # Load settings from env variables
-# django_heroku.settings(locals(), allowed_hosts=False)
+django_heroku.settings(locals(), allowed_hosts=False)
 
 
 
