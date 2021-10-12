@@ -28,9 +28,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-DEBUG = bool(os.environ.get('DJANGO_DEBUG', False))
-
-ALLOWED_HOSTS = ['testserver', '127.0.0.1', ]  # 'evening-reef-96678.herokuapp.com'
+DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
 
 # Application definition
 
@@ -170,12 +168,18 @@ if DEBUG:
         '127.0.0.1',
     ]
 
-# Load settings from env variables
-django_heroku.settings(locals())
-
 # cloudinary
 cloudinary.config(
     cloud_name=os.environ.get('DJANGO_CLOUD_NAME', "dsg2wylkr"),
     api_key=os.environ.get('DJANGO_CLOUD_KEY', "678435832967774"),
     api_secret=os.environ.get('DJANGO_CLOUD_SECRET', "W_jvzN7oLyYWqAAKdD8hofhnVoo")
 )
+
+# Load settings from env variables
+django_heroku.settings(locals())
+
+# 'evening-reef-96678.herokuapp.com'
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost').split(',')
+ALLOWED_HOSTS.extend(['testserver', '127.0.0.1'])
+
+
