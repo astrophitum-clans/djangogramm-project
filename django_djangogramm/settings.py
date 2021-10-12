@@ -80,14 +80,6 @@ WSGI_APPLICATION = 'django_djangogramm.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
-# Local debug database
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -139,6 +131,11 @@ USE_TZ = True
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 
+# Media
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
@@ -146,10 +143,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Redirect to home URL after login
 LOGIN_REDIRECT_URL = '/'
-
-# Media
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
 
 # Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -161,6 +154,13 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = os.environ.get('DJANGO_EMAIL_HOST_USER', 'astrophitum.clans@gmail.com')
 EMAIL_HOST_PASSWORD = os.environ.get('DJANGO_EMAIL_HOST_PASSWORD', 'm091278mm')
 
+# cloudinary
+cloudinary.config(
+    cloud_name=os.environ.get('DJANGO_CLOUD_NAME', "dsg2wylkr"),
+    api_key=os.environ.get('DJANGO_CLOUD_KEY', "678435832967774"),
+    api_secret=os.environ.get('DJANGO_CLOUD_SECRET', "W_jvzN7oLyYWqAAKdD8hofhnVoo")
+)
+
 # In debug mode:
 if DEBUG:
     # Django debug toolbar
@@ -169,13 +169,6 @@ if DEBUG:
     INTERNAL_IPS = [
         '127.0.0.1',
     ]
-
-# cloudinary
-cloudinary.config(
-    cloud_name=os.environ.get('DJANGO_CLOUD_NAME', "dsg2wylkr"),
-    api_key=os.environ.get('DJANGO_CLOUD_KEY', "678435832967774"),
-    api_secret=os.environ.get('DJANGO_CLOUD_SECRET', "W_jvzN7oLyYWqAAKdD8hofhnVoo")
-)
 
 # Load settings from env variables
 django_heroku.settings(locals(), allowed_hosts=False)
