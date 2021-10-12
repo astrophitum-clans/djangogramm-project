@@ -159,7 +159,7 @@ EMAIL_HOST = 'smtp.googlemail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = os.environ.get('DJANGO_EMAIL_HOST_USER', 'astrophitum.clans@gmail.com')
-EMAIL_HOST_PASSWORD = os.environ.get('DJANGO_HOST_PASSWORD', 'm091278mm')
+EMAIL_HOST_PASSWORD = os.environ.get('DJANGO_EMAIL_HOST_PASSWORD', 'm091278mm')
 
 # In debug mode:
 if DEBUG:
