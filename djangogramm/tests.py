@@ -53,7 +53,7 @@ class TestAccount(TestCase):
             },
             follow=True)
         self.assertEqual(resp.status_code, 200)
-        self.assertEqual(resp.redirect_chain, [('/accounts/signup/done/', 302)])
+        self.assertRedirects(resp, '/accounts/signup/done/')
         user = DgUser.objects.get(email='test_user2@test.com')
         self.assertEqual(user.email, 'test_user2@test.com')
         self.assertEqual(user.is_activated, False)
@@ -61,22 +61,22 @@ class TestAccount(TestCase):
 
     def test_user_profile(self):
         """Test user profile page functionality"""
-        self.client.login(username='test_user@test.com', password='12345')
-        resp = self.client.post(
-            '/accounts/profile/',
-            {
-                'email': 'test_user@test.com',
-                'first_name': 'Sebastian',
-                'last_name': 'Fettel',
-                'bio': 'Test bio'
-            }, follow=True)
+        login = self.client.login(username='test_user@test.com', password='12345')
+        print(f'!!!!!!!!!!!!!!!!!!!!!!!!!!!! {login} !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+        resp = self.client.post('/accounts/profile/', {'email': 'test_user@test.com',
+                                                       'first_name': 'fffffff',
+                                                       'last_name': 'zzzzzzz',
+                                                       'bio': 'Test bio'})  # , follow=True
         self.assertEqual(resp.status_code, 200)
-        self.assertEqual(resp.redirect_chain, [('/', 302)])
+        self.assertEqual(resp.redirect_chain, [('', 302)])
         user = DgUser.objects.get(email='test_user@test.com')
-        self.assertEqual(user.first_name, 'Sebastian')
-        self.assertEqual(user.last_name, 'Fettel')
+        print(user.first_name)
+        print(user.is_activated)
+        print(user.is_active)
+        self.assertEqual(user.email, 'test_user@test.com')
+        self.assertEqual(user.first_name, 'fffffff')
+        self.assertEqual(user.last_name, 'zzzzzzz')
         self.assertEqual(user.bio, 'Test bio')
-
 
 class TestPosts(TestCase):
     """Test djangogramm posts"""

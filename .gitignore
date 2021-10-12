@@ -9,3 +9,5 @@ djangogramm/authentication.py
 /htmlcov/
 .coverage
 settings.py.debug
+/.bashrc
+/bashrc_win.cmd

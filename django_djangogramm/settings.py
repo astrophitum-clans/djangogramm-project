@@ -24,13 +24,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-h+gmizelv*h)(y1ua)qa5f3z4bq%4jz%(-*)**%h$1pw-c2ibz')
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
+DEBUG = bool(os.environ.get('DJANGO_DEBUG', False))
 
-ALLOWED_HOSTS = ['evening-reef-96678.herokuapp.com/', '127.0.0.1', 'localhost', 'testserver']
+ALLOWED_HOSTS = ['testserver', '127.0.0.1', ]  # 'evening-reef-96678.herokuapp.com'
 
 # Application definition
 
@@ -80,31 +80,27 @@ WSGI_APPLICATION = 'django_djangogramm.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
-# local database
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'djangogramm',
-        'USER': 'dg',
-        'PASSWORD': 'm091278mm',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
-# use heroku postgres db
-# DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
+# local debug database
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'djangogramm',
+#         'USER': 'dg',
+#         'PASSWORD': '12345',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
 
 # add custom user model
 AUTH_USER_MODEL = 'djangogramm.DgUser'
-# AUTHENTICATION_BACKENDS = ['djangogramm.authentication.EmailBackend']
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -140,7 +136,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 
@@ -156,15 +151,15 @@ LOGIN_REDIRECT_URL = '/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-# email settings
+# Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-# gmail
+# Gmail SMTP
 EMAIL_HOST = 'smtp.googlemail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'astrophitum.clans@gmail.com'
-EMAIL_HOST_PASSWORD = 'm091278mm'
+EMAIL_HOST_USER = os.environ.get('DJANGO_EMAIL_HOST_USER', 'astrophitum.clans@gmail.com')
+EMAIL_HOST_PASSWORD = os.environ.get('DJANGO_HOST_PASSWORD', 'm091278mm')
 
 # In debug mode:
 if DEBUG:
@@ -175,12 +170,12 @@ if DEBUG:
         '127.0.0.1',
     ]
 
-# Activate Django-Heroku.
+# Load settings from env variables
 django_heroku.settings(locals())
 
 # cloudinary
 cloudinary.config(
-    cloud_name="dsg2wylkr",
-    api_key="678435832967774",
-    api_secret="W_jvzN7oLyYWqAAKdD8hofhnVoo"
+    cloud_name=os.environ.get('DJANGO_CLOUD_NAME', "dsg2wylkr"),
+    api_key=os.environ.get('DJANGO_CLOUD_KEY', "678435832967774"),
+    api_secret=os.environ.get('DJANGO_CLOUD_SECRET', "W_jvzN7oLyYWqAAKdD8hofhnVoo")
 )
