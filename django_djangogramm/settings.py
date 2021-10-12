@@ -28,7 +28,9 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
+DEBUG = False
+
+ALLOWED_HOSTS = ['evening-reef-96678.herokuapp.com', 'testserver', '127.0.0.1']
 
 # Application definition
 
@@ -78,24 +80,24 @@ WSGI_APPLICATION = 'django_djangogramm.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
-# local debug database
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'djangogramm',
-#         'USER': 'dg',
-#         'PASSWORD': '12345',
-#         'HOST': 'localhost',
-#         'PORT': '5432',
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+
+# Local debug database
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'djangogramm',
+        'USER': 'postgres',
+        'PASSWORD': 'm091278mm',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
+}
 
 # add custom user model
 AUTH_USER_MODEL = 'djangogramm.DgUser'
@@ -123,7 +125,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
 
@@ -176,10 +178,8 @@ cloudinary.config(
 )
 
 # Load settings from env variables
-django_heroku.settings(locals())
+# django_heroku.settings(locals(), allowed_hosts=False)
 
-# 'evening-reef-96678.herokuapp.com'
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost').split(',')
-ALLOWED_HOSTS.extend(['testserver', '127.0.0.1'])
+
 
 

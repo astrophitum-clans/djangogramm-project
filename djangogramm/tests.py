@@ -1,12 +1,13 @@
 from django.test import TestCase
-
 from djangogramm.models import DgUser, DgPost
 
 
 class TestAccount(TestCase):
     """Test djangogramm accounts"""
 
-    def setUp(self):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
         # create test user
         test_user = DgUser.objects.create_user('test_user@test.com', '12345')
         test_user.is_active = True
@@ -36,7 +37,7 @@ class TestAccount(TestCase):
 
     def test_user_logout(self):
         """Test user logout functionality"""
-        self.client.post('/accounts/login/', {'username': 'test_wrong_user@test.com', 'password': '12345'})
+        self.client.post('/accounts/login/', {'username': 'test_user@test.com', 'password': '12345'})
         resp = self.client.get('/accounts/logout/')
         self.assertEqual(resp.status_code, 200)
         self.assertTemplateUsed(resp, 'djangogramm/logout.html')
@@ -59,29 +60,30 @@ class TestAccount(TestCase):
         self.assertEqual(user.is_activated, False)
         self.assertEqual(user.is_active, False)
 
+
     def test_user_profile(self):
         """Test user profile page functionality"""
+
         login = self.client.login(username='test_user@test.com', password='12345')
-        print(f'!!!!!!!!!!!!!!!!!!!!!!!!!!!! {login} !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-        resp = self.client.post('/accounts/profile/', {'email': 'test_user@test.com',
-                                                       'first_name': 'fffffff',
-                                                       'last_name': 'zzzzzzz',
-                                                       'bio': 'Test bio'})  # , follow=True
+        self.assertEqual(login, True)
+        resp = self.client.post('/accounts/profile/',
+                                {'email': 'test_user@test.com', 'first_name': 'Michail', 'last_name': 'Smith',
+                                 'bio': 'Test bio'}, follow=True)
         self.assertEqual(resp.status_code, 200)
-        self.assertEqual(resp.redirect_chain, [('', 302)])
+        self.assertRedirects(resp, '/')
         user = DgUser.objects.get(email='test_user@test.com')
-        print(user.first_name)
-        print(user.is_activated)
-        print(user.is_active)
         self.assertEqual(user.email, 'test_user@test.com')
-        self.assertEqual(user.first_name, 'fffffff')
-        self.assertEqual(user.last_name, 'zzzzzzz')
+        self.assertEqual(user.first_name, 'Michail')
+        self.assertEqual(user.last_name, 'Smith')
         self.assertEqual(user.bio, 'Test bio')
+
 
 class TestPosts(TestCase):
     """Test djangogramm posts"""
 
-    def setUp(self):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
         # create test user
         test_user = DgUser.objects.create_user('test_user@test.com', '12345')
         test_user.is_active = True
@@ -92,18 +94,18 @@ class TestPosts(TestCase):
             DgPost.objects.create(
                 dg_user=test_user,
                 title=f'Test post {i}',
-                desc=f'Test post {i} desc'
+                desc=f'Test post desc {i}'
             )
 
     def test_posts_list_page(self):
         """Test posts list page."""
         self.client.login(username='test_user@test.com', password='12345')
-        resp = self.client.get('')
+        resp = self.client.get('/')
         self.assertEqual(resp.status_code, 200)
-        last_post = resp.context['object_list'][0]
-        self.assertEqual(last_post.title, 'Test post 3')  # 'Test post 3' is the last post!
-        self.assertEqual(last_post.desc, 'Test post 3 desc')
-        self.assertEqual(last_post.dg_user.email, 'test_user@test.com')
+        post = resp.context['object_list'][0]
+        self.assertIn('Test post', post.title)  # 'Test post 3' is the last post!
+        self.assertIn('Test post desc', post.desc)
+        self.assertEqual(post.dg_user.email, 'test_user@test.com')
         self.assertEqual(len(resp.context['object_list']), 3)  # total 3 posts
 
     def test_posts_list_page_no_login(self):
@@ -114,17 +116,15 @@ class TestPosts(TestCase):
 
     def test_add_post(self):
         """Test add post functionality"""
-        self.client.login(username='test_user@test.com', password='12345')
+        login = self.client.login(username='test_user@test.com', password='12345')
         resp = self.client.post(
             '/posts/create/',
             {
                 'title': 'Test post 22',
                 'desc': 'Test post 22 desc'
-            },
-            follow=True
-        )
+            }, follow=True)
         self.assertEqual(resp.status_code, 200)
-        self.assertEqual(resp.redirect_chain, [('/', 302)])
+        self.assertRedirects(resp, '/')
         post = DgPost.objects.get(title='Test post 22')
         self.assertEqual(post.title, 'Test post 22')
         self.assertEqual(post.desc, 'Test post 22 desc')

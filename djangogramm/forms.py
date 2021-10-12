@@ -44,13 +44,14 @@ class UserProfileForm(ModelForm):
         disabled=True
     )
     avatar = CloudinaryFileField(
-        # attrs={'style': "margin-top: 30px"},
         options={
             'tags': "user_avatar",
             'crop': 'fill', 'width': 256, 'height': 256,
             'folder': 'media/avatars/',
             'eager': [{'crop': 'fill', 'height': 100, 'width': 100}]
-        })
+        },
+        required=False
+    )
 
     class Meta:
         model = get_user_model()
@@ -58,12 +59,15 @@ class UserProfileForm(ModelForm):
 
 
 class PostCreateForm(ModelForm):
+    """Create post form"""
     image = CloudinaryFileField(
         options={
             'tags': "post_image",
             'crop': 'fill', 'width': 960,
             'folder': 'media/images/'
-        })
+        },
+        required=False
+    )
 
     class Meta:
         model = DgPost
