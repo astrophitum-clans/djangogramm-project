@@ -165,14 +165,11 @@ cloudinary.config(
 if DEBUG:
     # Django debug toolbar
     INSTALLED_APPS.append('debug_toolbar')
-    MIDDLEWARE = ['debug_toolbar.middleware.DebugToolbarMiddleware'] + MIDDLEWARE
+    MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')
     INTERNAL_IPS = [
         '127.0.0.1',
     ]
+    INSTALLED_APPS.append('django_extensions')
 
 # Load settings from env variables
 django_heroku.settings(locals(), allowed_hosts=False)
-
-
-
-

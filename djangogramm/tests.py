@@ -60,7 +60,6 @@ class TestAccount(TestCase):
         self.assertEqual(user.is_activated, False)
         self.assertEqual(user.is_active, False)
 
-
     def test_user_profile(self):
         """Test user profile page functionality"""
 

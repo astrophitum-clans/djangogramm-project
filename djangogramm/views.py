@@ -1,4 +1,5 @@
 from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.shortcuts import render, get_object_or_404, redirect
@@ -6,9 +7,10 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView, TemplateView, ListView
 from django.core.signing import BadSignature
 
+from djangogramm import models
 from djangogramm.utilities import signer
 from djangogramm.forms import LoginForm, SignUpForm, UserProfileForm, PostCreateForm
-from djangogramm.models import DgUser, DgPost
+from djangogramm.models import DgUser, DgPost, Like
 
 
 # User views
@@ -79,8 +81,15 @@ class DgPostListView(LoginRequiredMixin, ListView):
     model = DgPost
     template_name = 'djangogramm/index.html'
 
+    def setup(self, request, *args, **kwargs):
+        self.user = request.user
+        return super().setup(request, *args, **kwargs)
+
     def get_queryset(self):
-        return DgPost.objects.select_related('dg_user')
+        posts = DgPost.objects.prefetch_related('dg_user')
+        for post in posts:
+            post.is_follower = post.dg_user.is_follower(self.user)
+        return posts
 
 
 class DgPostCreateView(LoginRequiredMixin, CreateView):
@@ -92,3 +101,48 @@ class DgPostCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.dg_user = self.request.user
         return super().form_valid(form)
+
+
+class DgNewsListView(LoginRequiredMixin, ListView):
+    """News page"""
+    model = DgPost
+    template_name = 'djangogramm/index.html'
+
+    def setup(self, request, *args, **kwargs):
+        self.user = request.user
+        return super().setup(request, *args, **kwargs)
+
+    def get_queryset(self):
+        posts = DgPost.objects.filter(dg_user__in=self.user.following).prefetch_related('dg_user')
+        for post in posts:
+            post.is_follower = post.dg_user.is_follower(self.user)
+        return posts
+
+
+@login_required
+def follow(request, dg_user_id):
+    """follow/unfollow functional"""
+    if request.method == 'POST':
+        following_user = get_object_or_404(DgUser, pk=dg_user_id)
+        if request.user in following_user.followers.all():
+            following_user.followers.remove(request.user)
+        else:
+            following_user.followers.add(request.user)
+        return redirect(request.POST.get('next', '/'))
+
+
+@login_required
+def like(request, post_id):
+    """like/unlike functional"""
+    if request.method == 'POST':
+        post = get_object_or_404(DgPost, pk=post_id)
+        try:
+            # If child Like model does not exit then create
+            post.likes
+        except models.DgPost.likes.RelatedObjectDoesNotExist:
+            Like.objects.create(post=post)
+        if request.user in post.likes.users.all():
+            post.likes.users.remove(request.user)
+        else:
+            post.likes.users.add(request.user)
+        return redirect(request.POST.get('next', '/'))

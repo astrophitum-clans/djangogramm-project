@@ -10,11 +10,41 @@
             {% if post.dg_user.avatar %}
                 {% cloudinary post.dg_user.avatar crop="fill" height=100 width=100 %}
             {% endif %}
-            {{ post.dg_user.username }}
-            {{ post.dg_user.email }}
+            <strong class="mx-3">{{ post.dg_user.get_name }}</strong>
+            <span class="mx-3">Followers: {{ post.dg_user.count_followers }}</span>
+            <span class="mx-3">Following: {{ post.dg_user.count_following }}</span>
+            <span>{{ post.follow }}</span>
+
+            {# Follow/Unfollow button #}
+            {% if user != post.dg_user %}
+            <form class="mt-3 mx-3" role="form" action="{% url 'djangogramm:follow' dg_user_id=post.dg_user.id %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                {% if post.is_follower %}
+                    {% buttons submit='Unfollow' %}{% endbuttons %}
+                {% else %}
+                    {% buttons submit='Follow' %}{% endbuttons %}
+                {% endif %}
+            </form>
+            {% endif %}
         </div>
         <img src="{{ post.image.url }}" class="img-fluid">
-        <h5 class="mt-2 px-2">{{ post.title }}</h5>
+        <h5 class="mt-2 mx-2">{{ post.title }}</h5>
+
+        <p class="mt-2 mx-2">
+            Likes: {% if post.get_total_likes %}{{post.get_total_likes}} {% else %} 0 {% endif %}
+        </p>
+        <form class="mx-2" role="form" action="{% url 'djangogramm:like' post_id=post.id %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+        {% if not user in post.likes.users.all %}
+            {% buttons submit='Like' %}{% endbuttons %}
+        {% else %}
+            {% buttons submit='Unlike' %}{% endbuttons %}
+        {% endif %}
+        </form>
+
+
         <small class="p-2">{{ post.pub_date }}</small>
         <p class="p-2">{{ post.desc }}</p>
         </li>

@@ -55,10 +55,41 @@ class DgUser(AbstractUser):
     bio = models.TextField(blank=True, null=True, verbose_name='biography')
     avatar = CloudinaryField('image', blank=True, null=True)
 
+    followers = models.ManyToManyField('self', symmetrical=False, blank=True)
+
     objects = DgUserManager()
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
+
+    @property
+    def following(self):
+        """Return following users"""
+        return DgUser.objects.filter(followers=self)
+
+    @property
+    def fullname(self):
+        fullname = f'{self.first_name} {self.last_name}'
+        return fullname if len(fullname) > 1 else None
+
+    @property
+    def get_name(self):
+        """Return user name for views"""
+        return self.fullname or self.username or self.email.split('@')[0]
+
+    @property
+    def count_followers(self):
+        """Return followers count"""
+        return self.followers.count()
+
+    @property
+    def count_following(self):
+        """Return following count"""
+        return self.following.count()
+
+    def is_follower(self, user):
+        """Return True if user is follower of this"""
+        return user in self.followers.all()
 
 
 class DgPost(models.Model):
@@ -72,5 +103,17 @@ class DgPost(models.Model):
     def __str__(self):
         return self.title
 
+    def get_total_likes(self):
+        """Return number of likes"""
+        return self.likes.users.count() if self.likes.users.count() > 0 else '0'
+
     class Meta:
         ordering = ['-pub_date']
+
+
+class Like(models.Model):
+    """Likes model"""
+    post = models.OneToOneField(DgPost, related_name='likes', on_delete=models.CASCADE)
+    users = models.ManyToManyField(DgUser, related_name='like_users')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

@@ -21,6 +21,9 @@
               <a class="nav-link" href="{% url 'djangogramm:index' %}">Home</a>
             </li>
             <li class="nav-item">
+              <a class="nav-link" href="{% url 'djangogramm:news' %}">News</a>
+            </li>
+            <li class="nav-item">
               <a class="nav-link" href="{% url 'djangogramm:post_create' %}">Add Post</a>
             </li>
           {% if not user.is_authenticated %}
