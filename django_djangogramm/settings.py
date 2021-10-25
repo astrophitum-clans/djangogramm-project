@@ -169,7 +169,7 @@ if DEBUG:
     INTERNAL_IPS = [
         '127.0.0.1',
     ]
-    INSTALLED_APPS.append('django_extensions')
+    # INSTALLED_APPS.append('django_extensions')
 
 # Load settings from env variables
 django_heroku.settings(locals(), allowed_hosts=False)
