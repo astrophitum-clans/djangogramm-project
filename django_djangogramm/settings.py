@@ -80,6 +80,7 @@ WSGI_APPLICATION = 'django_djangogramm.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+# Local database.
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -169,7 +170,7 @@ if DEBUG:
     INTERNAL_IPS = [
         '127.0.0.1',
     ]
-    # INSTALLED_APPS.append('django_extensions')
+    INSTALLED_APPS.append('django_extensions')
 
 # Load settings from env variables
 django_heroku.settings(locals(), allowed_hosts=False)

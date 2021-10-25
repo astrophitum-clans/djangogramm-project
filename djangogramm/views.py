@@ -104,7 +104,7 @@ class DgPostCreateView(LoginRequiredMixin, CreateView):
 
 
 class DgNewsListView(LoginRequiredMixin, ListView):
-    """News page"""
+    """News list page"""
     model = DgPost
     template_name = 'djangogramm/index.html'
 
@@ -121,7 +121,7 @@ class DgNewsListView(LoginRequiredMixin, ListView):
 
 @login_required
 def follow(request, dg_user_id):
-    """follow/unfollow functional"""
+    """follow/unfollow functionality"""
     if request.method == 'POST':
         following_user = get_object_or_404(DgUser, pk=dg_user_id)
         if request.user in following_user.followers.all():
@@ -133,7 +133,7 @@ def follow(request, dg_user_id):
 
 @login_required
 def like(request, post_id):
-    """like/unlike functional"""
+    """like/unlike functionality"""
     if request.method == 'POST':
         post = get_object_or_404(DgPost, pk=post_id)
         try:

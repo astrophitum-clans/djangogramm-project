@@ -1,5 +1,7 @@
 from django.test import TestCase
-from djangogramm.models import DgUser, DgPost
+from django.urls import reverse
+
+from djangogramm.models import DgUser, DgPost, Like
 
 
 class TestAccount(TestCase):
@@ -89,7 +91,7 @@ class TestPosts(TestCase):
         test_user.is_activated = True
         test_user.save()
         # create test posts
-        for i in range(1, 4):  # create 3 test posts
+        for i in range(3):  # create 3 test posts
             DgPost.objects.create(
                 dg_user=test_user,
                 title=f'Test post {i}',
@@ -99,7 +101,7 @@ class TestPosts(TestCase):
     def test_posts_list_page(self):
         """Test posts list page."""
         self.client.login(username='test_user@test.com', password='12345')
-        resp = self.client.get('/')
+        resp = self.client.get(reverse('djangogramm:index'))
         self.assertEqual(resp.status_code, 200)
         post = resp.context['object_list'][0]
         self.assertIn('Test post', post.title)  # 'Test post 3' is the last post!
@@ -109,7 +111,7 @@ class TestPosts(TestCase):
 
     def test_posts_list_page_no_login(self):
         """Test posts list page without user login"""
-        resp = self.client.get('', follow=True)
+        resp = self.client.get(reverse('djangogramm:index'), follow=True)
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.redirect_chain, [('/accounts/login/?next=/', 302)])
 
@@ -117,7 +119,7 @@ class TestPosts(TestCase):
         """Test add post functionality"""
         login = self.client.login(username='test_user@test.com', password='12345')
         resp = self.client.post(
-            '/posts/create/',
+            reverse('djangogramm:post_create'),
             {
                 'title': 'Test post 22',
                 'desc': 'Test post 22 desc'
@@ -131,6 +133,93 @@ class TestPosts(TestCase):
 
     def test_add_page_no_login(self):
         """Test add post page without user login"""
-        resp = self.client.get('/posts/create/', follow=True)
+        resp = self.client.get(reverse('djangogramm:post_create'), follow=True)
         self.assertEqual(resp.status_code, 200)
         self.assertRedirects(resp, '/accounts/login/?next=/posts/create/')
+
+
+class TestNewsAndFollowing(TestCase):
+    """Test djangogramm following functionality"""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # create users
+        test_user = DgUser.objects.create_user('test_user@test.com', '12345')
+        test_user.is_active = True
+        test_user.is_activated = True
+        test_user.save()
+        # create user following to test_user
+        following_user = DgUser.objects.create_user('following_user@test.com', '12345')
+        # add to followers
+        following_user.followers.add(test_user)
+        # create test posts
+        DgPost.objects.create(
+            dg_user=test_user,
+            title='Test post',
+            desc='Test post desc'
+        )
+        DgPost.objects.create(
+            dg_user=following_user,
+            title='Following user post',
+            desc='Following user post desc'
+        )
+
+    def test_news_list_page(self):
+        """Test news page that shows only following user`s posts """
+        self.client.login(username='test_user@test.com', password='12345')
+        resp = self.client.get(reverse('djangogramm:news'))
+        self.assertIn(b'Following user post', resp.content)  # Following user post is in test_user news
+        self.assertNotIn(b'Test post desc', resp.content) # Other user posts are not in test_user news
+        self.assertEqual(resp.status_code, 200)
+
+    def test_news_list_page_no_login(self):
+        """Test news list page without user login"""
+        resp = self.client.get(reverse('djangogramm:news'), follow=True)
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.redirect_chain, [(f"/accounts/login/?next={reverse('djangogramm:news')}", 302)])
+
+    def test_following(self):
+        """Test following functionality"""
+        self.client.login(username='test_user@test.com', password='12345')
+        test_user = DgUser.objects.get(email='test_user@test.com')
+        third_user = DgUser.objects.create_user('third_user@test.com', '12345')
+        resp = self.client.post(reverse('djangogramm:follow', kwargs={'dg_user_id': third_user.pk}))
+        self.assertEqual(resp.status_code, 302)
+        self.assertIn(test_user, third_user.followers.all())
+
+    def test_unfollowing(self):
+        """Test unfollowing functionality"""
+        self.client.login(username='test_user@test.com', password='12345')
+        test_user = DgUser.objects.get(email='test_user@test.com')
+        following_user = DgUser.objects.get(email='following_user@test.com')
+        self.assertIn(test_user, following_user.followers.all())  # is follower yet
+        resp = self.client.post(reverse('djangogramm:follow', kwargs={'dg_user_id': following_user.pk}))
+        self.assertNotIn(test_user, following_user.followers.all())  # Not follower now
+        self.assertEqual(resp.status_code, 302)
+
+    def test_like(self):
+        """Test add like to post"""
+        self.client.login(username='test_user@test.com', password='12345')
+        test_user = DgUser.objects.get(email='test_user@test.com')
+        post = DgPost.objects.get(title='Following user post')
+        resp = self.client.post(reverse('djangogramm:like', kwargs={'post_id': post.pk}))
+        self.assertEqual(resp.status_code, 302)
+        self.assertIn(test_user, post.likes.users.all())
+
+    def test_unlike(self):
+        """Test unlike post"""
+        self.client.login(username='test_user@test.com', password='12345')
+        test_user = DgUser.objects.get(email='test_user@test.com')
+        post_user = DgUser.objects.create_user('post_user@test.com', '12345')
+        post = DgPost.objects.create(
+            dg_user=post_user,
+            title='Test likes post',
+            desc='Test likes post desc'
+        )
+        Like.objects.create(post=post)
+        post.likes.users.add(test_user)
+        self.assertIn(test_user, post.likes.users.all())  # Like this post yet
+        resp = self.client.post(reverse('djangogramm:like', kwargs={'post_id': post.pk}))
+        self.assertEqual(resp.status_code, 302)
+        self.assertNotIn(test_user, post.likes.users.all())  # Unlike this post

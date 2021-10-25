@@ -30,7 +30,6 @@
         </div>
         <img src="{{ post.image.url }}" class="img-fluid">
         <h5 class="mt-2 mx-2">{{ post.title }}</h5>
-
         <p class="mt-2 mx-2">
             Likes: {% if post.get_total_likes %}{{post.get_total_likes}} {% else %} 0 {% endif %}
         </p>
