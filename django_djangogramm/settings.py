@@ -16,21 +16,27 @@ import django_heroku
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
+import environ
+
+env = environ.Env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Take environment variables from .env.debug file
+environ.Env.read_env(os.path.join(BASE_DIR, '.env.debug'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure')
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-DEBUG = False
+DEBUG = env.bool('DEBUG')
 
-ALLOWED_HOSTS = ['evening-reef-96678.herokuapp.com', 'testserver', '127.0.0.1']
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
 # Application definition
 
@@ -80,16 +86,8 @@ WSGI_APPLICATION = 'django_djangogramm.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-# Local database.
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'djangogramm',
-        'USER': 'postgres',
-        'PASSWORD': 'm091278mm',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
+    'default': env.db()
 }
 
 # add custom user model
@@ -152,14 +150,14 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.googlemail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = os.environ.get('DJANGO_EMAIL_HOST_USER', 'astrophitum.clans@gmail.com')
-EMAIL_HOST_PASSWORD = os.environ.get('DJANGO_EMAIL_HOST_PASSWORD', 'm091278mm')
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 
 # cloudinary
 cloudinary.config(
-    cloud_name=os.environ.get('DJANGO_CLOUD_NAME', "dsg2wylkr"),
-    api_key=os.environ.get('DJANGO_CLOUD_KEY', "678435832967774"),
-    api_secret=os.environ.get('DJANGO_CLOUD_SECRET', "W_jvzN7oLyYWqAAKdD8hofhnVoo")
+    cloud_name=env('CLOUD_NAME'),
+    api_key=env('CLOUD_KEY'),
+    api_secret=env('CLOUD_SECRET')
 )
 
 # In debug mode:
@@ -173,4 +171,4 @@ if DEBUG:
     INSTALLED_APPS.append('django_extensions')
 
 # Load settings from env variables
-django_heroku.settings(locals(), allowed_hosts=False)
+# django_heroku.settings(locals(), allowed_hosts=False)
