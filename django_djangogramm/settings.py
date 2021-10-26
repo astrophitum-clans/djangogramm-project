@@ -173,7 +173,7 @@ if DEBUG:
     INSTALLED_APPS.append('debug_toolbar')
     MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')
     INTERNAL_IPS = [
-        '127.0.0.1',
+        '127.0.0.1', 'evening-reef-96678.herokuapp.com',
     ]
     # INSTALLED_APPS.append('django_extensions')
 
