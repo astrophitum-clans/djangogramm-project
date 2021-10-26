@@ -1,2 +1,2 @@
-# djangogramm
-djangogramm project (small social network)
+# DjangoGramm project
+Small social network
