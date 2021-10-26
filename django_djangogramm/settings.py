@@ -87,7 +87,14 @@ WSGI_APPLICATION = 'django_djangogramm.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    'default': env.db()
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'djangogramm',
+        'USER': 'postgres',
+        'PASSWORD': 'm091278mm',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
 }
 
 # add custom user model
