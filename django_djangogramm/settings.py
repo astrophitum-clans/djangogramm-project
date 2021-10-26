@@ -171,4 +171,4 @@ if DEBUG:
     INSTALLED_APPS.append('django_extensions')
 
 # Load settings from env variables
-django_heroku.settings(locals(), allowed_hosts=False)
+# django_heroku.settings(locals(), allowed_hosts=False)
