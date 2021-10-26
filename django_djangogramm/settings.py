@@ -157,8 +157,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.googlemail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = env('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_USER = 'astrophitum.clans@gmail.com'  # env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = 'm091278mm' # env('EMAIL_HOST_PASSWORD')
 
 # cloudinary
 cloudinary.config(
