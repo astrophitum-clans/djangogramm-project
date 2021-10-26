@@ -97,6 +97,9 @@ DATABASES = {
     }
 }
 
+# Load settings from env variables
+django_heroku.settings(locals(), allowed_hosts=False)
+
 # add custom user model
 AUTH_USER_MODEL = 'djangogramm.DgUser'
 
@@ -176,6 +179,3 @@ if DEBUG:
         '127.0.0.1', 'evening-reef-96678.herokuapp.com',
     ]
     # INSTALLED_APPS.append('django_extensions')
-
-# Load settings from env variables
-django_heroku.settings(locals(), allowed_hosts=False)
