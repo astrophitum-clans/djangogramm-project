@@ -34,22 +34,22 @@ SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-DEBUG = env.bool('DEBUG')
+DEBUG = env.bool('DEBUG', default=False)
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
 # Application definition
 
 INSTALLED_APPS = [
-    'djangogramm.apps.DjangogrammConfig',
-    'bootstrap5',
-    'cloudinary',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'djangogramm.apps.DjangogrammConfig',
+    'bootstrap5',
+    'cloudinary',
 ]
 
 MIDDLEWARE = [
@@ -96,9 +96,6 @@ DATABASES = {
         'PORT': '5432',
     }
 }
-
-# Load settings from env variables
-django_heroku.settings(locals(), allowed_hosts=False)
 
 # add custom user model
 AUTH_USER_MODEL = 'djangogramm.DgUser'
@@ -179,3 +176,6 @@ if DEBUG:
         '127.0.0.1',
     ]
     INSTALLED_APPS.append('django_extensions')
+
+# Load settings from env variables
+django_heroku.settings(locals(), allowed_hosts=False)

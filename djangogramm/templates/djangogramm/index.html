@@ -21,8 +21,10 @@
                 {% csrf_token %}
                 <input type="hidden" name="next" value="{{ request.get_full_path }}">
                 {% if post.is_follower %}
+                    <input type="hidden" name="isfollow" value="unfollow">
                     {% buttons submit='Unfollow' %}{% endbuttons %}
                 {% else %}
+                    <input type="hidden" name="isfollow" value="follow">
                     {% buttons submit='Follow' %}{% endbuttons %}
                 {% endif %}
             </form>
@@ -31,15 +33,17 @@
         <img src="{{ post.image.url }}" class="img-fluid">
         <h5 class="mt-2 mx-2">{{ post.title }}</h5>
         <p class="mt-2 mx-2">
-            Likes: {% if post.get_total_likes %}{{post.get_total_likes}} {% else %} 0 {% endif %}
+            Likes: {{post.get_total_likes}}
         </p>
         <form class="mx-2" role="form" action="{% url 'djangogramm:like' post_id=post.id %}" method="post">
             {% csrf_token %}
             <input type="hidden" name="next" value="{{ request.get_full_path }}">
-        {% if not user in post.likes.users.all %}
-            {% buttons submit='Like' %}{% endbuttons %}
+        {% if post.is_like %}
+            <input type="hidden" name="islike" value="unlike">
+            {% buttons submit='UnLike' %}{% endbuttons %}
         {% else %}
-            {% buttons submit='Unlike' %}{% endbuttons %}
+            <input type="hidden" name="islike" value="like">
+            {% buttons submit='Like' %}{% endbuttons %}
         {% endif %}
         </form>
         <small class="p-2">{{ post.pub_date }}</small>

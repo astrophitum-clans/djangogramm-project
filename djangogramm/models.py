@@ -69,8 +69,7 @@ class DgUser(AbstractUser):
 
     @property
     def fullname(self):
-        fullname = f'{self.first_name} {self.last_name}'
-        return fullname if len(fullname) > 1 else None
+        return ' '.join(filter(lambda x: x, [self.first_name, self.last_name]))
 
     @property
     def get_name(self):
@@ -105,7 +104,7 @@ class DgPost(models.Model):
 
     def get_total_likes(self):
         """Return number of likes"""
-        return self.likes.users.count() if self.likes.users.count() > 0 else '0'
+        return self.likes.count()
 
     class Meta:
         ordering = ['-pub_date']
@@ -113,7 +112,12 @@ class DgPost(models.Model):
 
 class Like(models.Model):
     """Likes model"""
-    post = models.OneToOneField(DgPost, related_name='likes', on_delete=models.CASCADE)
-    users = models.ManyToManyField(DgUser, related_name='like_users')
+    post = models.ForeignKey(DgPost, related_name='likes', on_delete=models.CASCADE)
+    user = models.ForeignKey(DgUser, related_name='like_posts', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = (
+            'user',
+            'post',
+        )
